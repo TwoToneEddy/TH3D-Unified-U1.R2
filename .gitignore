@@ -69,3 +69,4 @@ CMakeLists.txt
 Marlin/CMakeLists.txt
 CMakeListsPrivate.txt
 cmake-build-*
+TH3DUF_R2/hexFile/
