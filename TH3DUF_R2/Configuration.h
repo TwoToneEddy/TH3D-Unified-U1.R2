@@ -324,7 +324,7 @@
 //===========================================================================
 // Creality Ender 3 Options - Select 'Sanguino 1284p' from Tools > Board
 //===========================================================================
-//#define ENDER3
+#define ENDER3
 
 // If you are using our EZOut V1/V2 (connected to LCD header) filament sensor kit please follow the install guide
 // and then uncomment the #define EZOUT_ENABLE line below.
@@ -338,7 +338,7 @@
 //#define TM3DAERO
 //#define TM3DAERO_EXTENDED
 //#define PETSFANG  //This is the RIGHT mounted version - if using the left mount please use the CUSTOM_PROBE option.
-//#define CUSTOM_PROBE
+#define CUSTOM_PROBE
 
 // If you are using the Creality "Silent" Board with the TMC drivers uncomment the below line
 //#define TMC_CREALITY_BOARD
@@ -806,7 +806,7 @@
 
 // If you want more or less EZABL probe points change the number below (only used if EZABL enabled)
 // Default is 3 which gives you 3x3 grid for a total of 9 points. STICK WITH ODD NUMBERS
-#define EZABL_POINTS 3
+#define EZABL_POINTS 5
 
 // If you want to probe in on the bed more than 15mm change this below. 
 // Do not use 30mm for the Standard CR-10/s or the S4 as you will be on the bed screws.
@@ -814,7 +814,7 @@
 // You can do down to 10mm on the Wanhao i3 since it cannot print on the entire bed.
 // You can do down to 5mm on the Wanhao i3 Mini since it cannot print on the entire bed.
 // (only used if EZABL enabled)
-#define EZABL_PROBE_EDGE 35
+#define EZABL_PROBE_EDGE 30
 
 // If you have issues with your machine running the faster probe setting disable the #define EZABL_FASTPROBE below.
 // DO NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
@@ -824,7 +824,7 @@
 //#define PROBING_MOTORS_OFF
 
 // Heaters will stay on during probing - only use if directed to by support. Do not use on AC beds.
-//#define HEATERS_ON_DURING_PROBING
+#define HEATERS_ON_DURING_PROBING
 
 // Letting the bed heat recover between probes can increase accuracy due to the bed warping during cooling/heating
 // Enabling the below option will let the bed get back to temperature during probing but will increase probing times.
@@ -864,8 +864,9 @@
   *      O-- FRONT --+
   *    (0,0)
   */
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 10  // X offset: -left  +right  [of the nozzle]
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 10  // Y offset: -front +behind [the nozzle]
+  #define X_PROBE_OFFSET_FROM_EXTRUDER -41// X offset: -left  +right  [of the nozzle]
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0  // Y offset: -front +behind [the nozzle]
+  #define Z_PROBE_OFFSET_FROM_EXTRUDER -1
 #endif
 
 //===========================================================================
@@ -881,9 +882,9 @@
 // If you need to reverse the e motor direction also enabled the REVERSE_E_MOTOR_DIRECTION option.
 // Example EStep Values: TH3D Aluminum Extruder - 95 ESteps, TH3D Tough Extruder - 463 ESteps, BMG Extruder - 415 ESteps
 // When installing a Tough Extruder or E3D Titan or Bondtech that is Geared you likely need to enable the REVERSE_E_MOTOR_DIRECTION option
-//#define CUSTOM_ESTEPS
+#define CUSTOM_ESTEPS
 //#define REVERSE_E_MOTOR_DIRECTION
-#define CUSTOM_ESTEPS_VALUE 463
+#define CUSTOM_ESTEPS_VALUE 395
 
 // DUAL HOTEND SETTINGS ----------------------------
 
@@ -894,7 +895,7 @@
 // HOTEND THERMISTOR SETTINGS ----------------------
 
 // If you are using an E3D V6 Hotend with their cartridge thermistor (not glass version) uncomment the below line.
-//#define V6_HOTEND
+#define V6_HOTEND
 
 // If you are using a Tough Hotend from TH3D or any thermistors TH3D sells for your hotend uncomment the below line.
 //#define TH3D_HOTEND_THERMISTOR
@@ -943,7 +944,7 @@
 //#define USER_PRINTER_NAME "CHANGE ME" 
 
 // If your printer is homing to the endstops hard uncomment this to change the homing speed/divisor to make it less aggressive.
-//#define SLOWER_HOMING
+#define SLOWER_HOMING
 
 // BOOT SCREEN OPTIONS -----------------------------
 
@@ -969,9 +970,9 @@
 // LINEAR ADVANCE ----------------------------------
 // See here on how to use Linear Advance: http://marlinfw.org/docs/features/lin_advance.html
 // NOTE: Linear Advance does NOT work with the Creality Silent boards or the CR-10 V2.
-//#define LINEAR_ADVANCE
+#define LINEAR_ADVANCE
 // Change the K Value here or use M900 KX.XX in your starting code (recommended).
-#define LINEAR_ADVANCE_K 0
+#define LINEAR_ADVANCE_K 0.03
 // NOTE: If using linear advance along with EZABL on a printer with 1284p some Control > Motion menus will not be displayed due to space restrictions.
 // You can still change these via GCode commands.
 
@@ -981,13 +982,13 @@
 // If you want to support the people that originally came up with the board you can get our EZOut breakout board here: http://EZOut.TH3DStudio.com
 // Sales from our shop allow us to allocate time for community firmware development at no charge to you. <3
 //
-//#define BLTOUCH
+#define BLTOUCH
 // If you are having issues with the probe not deploying/stowing correctly enable the below BLTOUCH_FORCE_SW_MODE
 //#define BLTOUCH_FORCE_SW_MODE
 // For V3.0 or 3.1: Set default mode to 5V mode at Marlin startup.
 //#define BLTOUCH_SET_5V_MODE
 // Here is where you set your servo pin. EZOut Servo Pin Numbers: Anet(with 2004LCD)/Ender3/5/CR-10 - 27, Anet(with 12864LCD)/Ender 2 - 29. For 2560 boards look for the pin you connected the servo wire to and enter below.
-//#define SERVO0_PIN 27
+#define SERVO0_PIN 27
 //
 // NOTE: On 1284p boards due to space limitations and the large amount of code the BLTouch requires for the LCD Menus
 // the Bootscreen and some Control > Motion menus will not be displayed due to space restrictions
