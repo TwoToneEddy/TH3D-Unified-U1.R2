@@ -883,7 +883,7 @@
 // Example EStep Values: TH3D Aluminum Extruder - 95 ESteps, TH3D Tough Extruder - 463 ESteps, BMG Extruder - 415 ESteps
 // When installing a Tough Extruder or E3D Titan or Bondtech that is Geared you likely need to enable the REVERSE_E_MOTOR_DIRECTION option
 #define CUSTOM_ESTEPS
-//#define REVERSE_E_MOTOR_DIRECTION
+#define REVERSE_E_MOTOR_DIRECTION
 #define CUSTOM_ESTEPS_VALUE 395
 
 // DUAL HOTEND SETTINGS ----------------------------
@@ -986,7 +986,7 @@
 // If you are having issues with the probe not deploying/stowing correctly enable the below BLTOUCH_FORCE_SW_MODE
 //#define BLTOUCH_FORCE_SW_MODE
 // For V3.0 or 3.1: Set default mode to 5V mode at Marlin startup.
-//#define BLTOUCH_SET_5V_MODE
+#define BLTOUCH_SET_5V_MODE
 // Here is where you set your servo pin. EZOut Servo Pin Numbers: Anet(with 2004LCD)/Ender3/5/CR-10 - 27, Anet(with 12864LCD)/Ender 2 - 29. For 2560 boards look for the pin you connected the servo wire to and enter below.
 #define SERVO0_PIN 27
 //
