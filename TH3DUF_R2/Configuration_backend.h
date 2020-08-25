@@ -8,9 +8,13 @@
 
 #include "Configuration_th3d.h"
 
+#if ENABLED(WANHAO_I3MINI_V2)
+  #define WANHAO_I3MINI
+#endif
+
 #if DISABLED(TH3DINHOUSEMACHINE)
   #if DISABLED(MKS_PRINTER)
-    #if ENABLED(TMC_CREALITY_BOARD) || ENABLED(CR10S_PRO) || ENABLED(CR10_V2)
+    #if ENABLED(TMC_CREALITY_BOARD) || ENABLED(CR10S_PRO) || ENABLED(CR10_V2) || ENABLED(CR10_MAX)
       #define X_DRIVER_TYPE  TMC2208_STANDALONE
       #define Y_DRIVER_TYPE  TMC2208_STANDALONE
       #define Z_DRIVER_TYPE  TMC2208_STANDALONE
@@ -48,14 +52,15 @@
 #if ENABLED(CUSTOM_PROBE)
   #define EZABL_ENABLE
 #endif
-#if ENABLED(ENDER5_PLUS_BLTOUCH) && ENABLED(ENDER5_PLUS)
-  #define BLTOUCH
-  #define SERVO0_PIN 11
-  #if DISABLED(CUSTOM_PROBE)
-    #define X_PROBE_OFFSET_FROM_EXTRUDER -44
-    #define Y_PROBE_OFFSET_FROM_EXTRUDER -9
-  #endif
+#if ENABLED(ZONESTAR_Z5F_STOCK_ABL)
   #define EZABL_ENABLE
+  #define X_PROBE_OFFSET_FROM_EXTRUDER 35
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0
+#endif
+#if ENABLED(SIDEWINDER_X1_OEM)
+  #define EZABL_ENABLE
+  #define X_PROBE_OFFSET_FROM_EXTRUDER 0 //TODO
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0 //TODO
 #endif
 #if ENABLED(CR10_MAX_BLTOUCH) && ENABLED(CR10_MAX)
   #define BLTOUCH
@@ -65,6 +70,11 @@
     #define Y_PROBE_OFFSET_FROM_EXTRUDER -0
   #endif
   #define EZABL_ENABLE
+#endif
+#if ENABLED(CRX_OEM)
+  #define EZABL_ENABLE
+  #define X_PROBE_OFFSET_FROM_EXTRUDER -5
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER -48
 #endif
 #if ENABLED(SV01_OEM_MOUNT)
   #define EZABL_ENABLE
@@ -223,6 +233,168 @@
   #define EZABL_ENABLE
 #endif
 
+#if ENABLED(ENDER5_PLUS)
+  #if DISABLED(ENDER5_PLUS_NOABL) && DISABLED(ENDER5_PLUS_EZABL)
+    #define BLTOUCH
+	  #define SERVO0_PIN 11
+	  #ifndef EZABL_PROBE_EDGE
+  	  #define EZABL_PROBE_EDGE 35
+  	#endif
+  	#ifndef EZABL_POINTS
+	    #define EZABL_POINTS 5
+	  #endif
+	  #if DISABLED(CUSTOM_PROBE)
+      #define X_PROBE_OFFSET_FROM_EXTRUDER -44
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER -9
+    #endif
+  #endif  
+  #if DISABLED(ENDER5_PLUS_NOABL)
+	  #define EZABL_ENABLE
+  #endif
+#endif
+
+//ZoneStar Z5F Settings
+#if ENABLED(ZONESTAR_Z5F)
+  #define BAUDRATE 115200
+
+  #define REPRAP_DISCOUNT_SMART_CONTROLLER
+  #define LCD2004
+
+  #define X_MIN_ENDSTOP_INVERTING true
+  #define Y_MIN_ENDSTOP_INVERTING true
+  #define Z_MIN_ENDSTOP_INVERTING true
+  #define X_MAX_ENDSTOP_INVERTING false
+  #define Y_MAX_ENDSTOP_INVERTING false
+  #define Z_MAX_ENDSTOP_INVERTING false
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING false
+
+  #if ENABLED(CUSTOM_ESTEPS)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  #else
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
+  #endif
+  
+  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 15, 50 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
+
+  #define DEFAULT_ACCELERATION          1000   
+  #define DEFAULT_RETRACT_ACCELERATION  1000  
+  #define DEFAULT_TRAVEL_ACCELERATION   1000   
+  
+  #define DEFAULT_XJERK                 7.0
+  #define DEFAULT_YJERK                 7.0
+  #define DEFAULT_ZJERK                 0.3
+  #define DEFAULT_EJERK                 5.0
+  
+  #define INVERT_X_DIR true
+  #define INVERT_Y_DIR true
+  #define INVERT_Z_DIR false
+  
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
+    
+  #ifndef MOTHERBOARD
+    #define MOTHERBOARD BOARD_ZRIB_V20
+  #endif
+
+  #define X_BED_SIZE 220
+  #define Y_BED_SIZE 220
+  #define Z_MAX_POS 220
+
+  #if ENABLED(HOME_ADJUST)
+    #define X_MIN_POS X_HOME_ADJUST_LOCATION
+    #define Y_MIN_POS Y_HOME_ADJUST_LOCATION
+  #else
+    #define X_MIN_POS -15
+    #define Y_MIN_POS -21
+  #endif
+  
+  //#define ENCODER_PULSES_PER_STEP 4
+  //#define ENCODER_STEPS_PER_MENU_ITEM 1
+  
+  #define PRINTER_ENABLED_CHECK
+
+#endif
+
+//AnyCubic Mega Zero Settings
+#if ENABLED(AC_MEGA_ZERO)
+  #define SLIM_1284P
+  #define BAUDRATE 115200
+
+  #define AC_BED
+
+  #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+
+  #if ENABLED(EZOUT_ENABLE)
+    #define SPEAKER_KILL
+  #endif
+
+  #if ENABLED(LINEAR_ADVANCE)
+    #define SPEAKER_KILL
+  #endif
+    
+  #define X_MIN_ENDSTOP_INVERTING false
+  #define Y_MIN_ENDSTOP_INVERTING false
+  #define Z_MIN_ENDSTOP_INVERTING false
+  #define X_MAX_ENDSTOP_INVERTING false
+  #define Y_MAX_ENDSTOP_INVERTING false
+  #define Z_MAX_ENDSTOP_INVERTING false
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING false
+
+  #if ENABLED(CUSTOM_ESTEPS)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  #else
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415 }
+  #endif
+  
+  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 15, 50 }
+  #define DEFAULT_MAX_ACCELERATION      { 500, 800, 500, 5000 }
+
+  #define DEFAULT_ACCELERATION          500   
+  #define DEFAULT_RETRACT_ACCELERATION  500  
+  #define DEFAULT_TRAVEL_ACCELERATION   500   
+  
+  #define DEFAULT_XJERK                 7.0
+  #define DEFAULT_YJERK                 7.0
+  #define DEFAULT_ZJERK                  0.3
+  #define DEFAULT_EJERK                  5.0
+  
+  #define INVERT_X_DIR true
+  #define INVERT_Y_DIR true
+  #define INVERT_Z_DIR false
+  
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR true
+  #else
+    #define INVERT_E0_DIR false
+  #endif
+    
+  #ifndef MOTHERBOARD
+    #define MOTHERBOARD BOARD_MELZI_CREALITY
+  #endif
+
+  #define X_BED_SIZE 225
+  #define Y_BED_SIZE 225
+  #define Z_MAX_POS 250
+
+  #if ENABLED(HOME_ADJUST)
+    #define X_MIN_POS X_HOME_ADJUST_LOCATION
+    #define Y_MIN_POS Y_HOME_ADJUST_LOCATION
+  #else
+    #define X_MIN_POS -7
+    #define Y_MIN_POS -3
+  #endif
+  
+  #define ENCODER_PULSES_PER_STEP 4
+  #define ENCODER_STEPS_PER_MENU_ITEM 1
+  
+  #define PRINTER_ENABLED_CHECK
+
+#endif
+
 //SOVOL SV01 Model Settings
 #if ENABLED(SOVOL_SV01)
   #define BAUDRATE 115200
@@ -244,7 +416,7 @@
 	#endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  500   
@@ -259,7 +431,11 @@
   #define INVERT_Y_DIR false
   #define INVERT_Z_DIR true
 
-  #define INVERT_E0_DIR true
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
   
   #ifndef MOTHERBOARD
     #define MOTHERBOARD BOARD_CR10S
@@ -321,7 +497,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -363,6 +539,8 @@
     #define MOTHERBOARD BOARD_CR10S
   #endif
   
+  #define MOUNTED_FILAMENT_SENSOR
+  
   #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
   
   #define BAUDRATE 115200
@@ -382,7 +560,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -423,9 +601,9 @@
     #define MOTHERBOARD BOARD_CR10S
   #endif
   
-  #if ENABLED(RR_LCD_UPGRADE)
-    #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
-  #endif
+  #define MOUNTED_FILAMENT_SENSOR 
+  
+  #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
   
   #define BAUDRATE 115200
 
@@ -438,13 +616,13 @@
   #define Z_MIN_PROBE_ENDSTOP_INVERTING false
   
   #if ENABLED(CUSTOM_ESTEPS)
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, CUSTOM_ESTEPS_VALUE }
   #else
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 140 }
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 95 }
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 1000 }
+  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          300    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -508,7 +686,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 1000 }
+  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          300    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -552,9 +730,9 @@
     #define MOTHERBOARD BOARD_CR10S
   #endif
   
-  #if ENABLED(RR_LCD_UPGRADE)
-    #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
-  #endif
+  #define MOUNTED_FILAMENT_SENSOR
+  
+  #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
   
   #define BAUDRATE 115200
 
@@ -573,7 +751,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -643,7 +821,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 450, 450, 20, 25 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          800    
   #define DEFAULT_RETRACT_ACCELERATION  800   
@@ -710,7 +888,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 100, 100, 15, 20 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 4000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  500   
@@ -849,12 +1027,6 @@
     #define INVERT_Z_DIR true
   #endif
   
-  #if MKS_Z_DIRECTION == 0
-    #define INVERT_Z_DIR false
-  #else
-    #define INVERT_Z_DIR true
-  #endif
-  
   #if MKS_E0_DIRECTION == 0
     #define INVERT_E0_DIR false
   #else
@@ -885,7 +1057,7 @@
   #define E4_DRIVER_TYPE A4988
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -942,7 +1114,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 400, 400, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -956,7 +1128,12 @@
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR true
   #define INVERT_Z_DIR true
-  #define INVERT_E0_DIR true
+  
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
   
   #ifndef MOTHERBOARD
     #define MOTHERBOARD BOARD_MKS_BASE
@@ -1007,7 +1184,7 @@
   
   #define DEFAULT_MAX_FEEDRATE          { 400, 400, 15, 50 }
 
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 50, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
   
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -1077,7 +1254,7 @@
   
   #define DEFAULT_MAX_FEEDRATE          { 400, 400, 15, 50 }
 
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 50, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
   
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -1142,7 +1319,7 @@
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
 
-  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 50, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 500, 5000 }
   
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  3000   
@@ -1202,7 +1379,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 50, 2000 }
+  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -1276,7 +1453,7 @@
   #define E0_DRIVER_TYPE DVR8825
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 200, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1500   
@@ -1313,6 +1490,86 @@
   #define ENCODER_STEPS_PER_MENU_ITEM 1
   
   #define PRINTER_ENABLED_CHECK
+#endif
+
+//Artillery X1 Settings
+#if ENABLED(SIDEWINDER_X1)
+  #ifndef MOTHERBOARD
+    #define MOTHERBOARD BOARD_MKS_GEN_L
+  #endif
+
+  #define EZOUTV2_ENABLE
+  #define STOCK_MKS_PRINTER
+  #define DIRECT_DRIVE_PRINTER
+
+  #define X_DRIVER_TYPE  TMC2100  
+  #define Y_DRIVER_TYPE  TMC2100
+  #define Z_DRIVER_TYPE  TMC2100
+  #define E0_DRIVER_TYPE TMC2100
+  #define Z2_DRIVER_TYPE TMC2100
+  
+  #define MKS_MINI_12864
+  #define BAUDRATE 250000
+
+  #define X_MIN_ENDSTOP_INVERTING true
+  #define Y_MIN_ENDSTOP_INVERTING true
+  #define Z_MIN_ENDSTOP_INVERTING true
+  #define X_MAX_ENDSTOP_INVERTING true
+  #define Y_MAX_ENDSTOP_INVERTING true
+  #define Z_MAX_ENDSTOP_INVERTING true
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING true
+  
+  #if ENABLED(CUSTOM_ESTEPS)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  #else
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 463 }
+  #endif
+  
+  #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
+  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 1000, 5000 }
+
+  #define DEFAULT_ACCELERATION          1000    
+  #define DEFAULT_RETRACT_ACCELERATION  1000   
+  #define DEFAULT_TRAVEL_ACCELERATION   1000    
+  
+  #define DEFAULT_XJERK                 10.0
+  #define DEFAULT_YJERK                 10.0
+  #define DEFAULT_ZJERK                  0.4
+  #define DEFAULT_EJERK                  5.0
+  
+  #define INVERT_X_DIR false
+  #define INVERT_Y_DIR false
+  #define INVERT_Z_DIR true
+  
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR true
+  #else
+    #define INVERT_E0_DIR false
+  #endif
+
+  #define X_BED_SIZE 300
+  #define Y_BED_SIZE 300
+  #define Z_MAX_POS 400
+  
+  #if ENABLED(HOME_ADJUST)
+    #define X_MIN_POS X_HOME_ADJUST_LOCATION
+    #define Y_MIN_POS Y_HOME_ADJUST_LOCATION
+  #else
+    #define X_MIN_POS 0
+    #define Y_MIN_POS 0
+  #endif
+  
+  #define ENCODER_PULSES_PER_STEP 4
+  #define ENCODER_STEPS_PER_MENU_ITEM 1
+  
+  #define PRINTER_ENABLED_CHECK
+
+  #define RGB_LED
+  #define RGB_LED_R_PIN 5
+  #define RGB_LED_G_PIN 4
+  #define RGB_LED_B_PIN 6
+  #define PRINTER_EVENT_LEDS
+  
 #endif
 
 //Artillery AL-4 Settings
@@ -1360,7 +1617,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 200, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          800    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -1458,7 +1715,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1250, 1250, 200, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1250, 1250, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -1474,7 +1731,7 @@
   #define INVERT_Z_DIR true
   
   #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
-    #define INVERT_E0_DIR true
+    #define INVERT_E0_DIR false
   #else
     #define INVERT_E0_DIR true
   #endif
@@ -1553,7 +1810,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 200, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          750    
   #define DEFAULT_RETRACT_ACCELERATION  1500   
@@ -1574,10 +1831,18 @@
     #define SINGLENOZZLE
   #endif
   
-  #if ENABLED(REVERSE_E_MOTOR_DIRECTION) || ENABLED(GEEETECH_A20M) || ENABLED(GEEETECH_A10M)
-    #define INVERT_E0_DIR false
-  #else
-    #define INVERT_E0_DIR true
+  #if ENABLED(GEEETECH_A20M) || ENABLED(GEEETECH_A10M)
+    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+	  #define INVERT_E0_DIR true
+    #else
+      #define INVERT_E0_DIR false
+    #endif
+  #else  
+    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+      #define INVERT_E0_DIR false
+    #else
+      #define INVERT_E0_DIR true
+    #endif
   #endif
   
   #if ENABLED(HOME_ADJUST)
@@ -1625,7 +1890,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 25 }
-  #define DEFAULT_MAX_ACCELERATION      { 800, 800, 200, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 800, 800, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          800    
   #define DEFAULT_RETRACT_ACCELERATION  2500   
@@ -1693,7 +1958,7 @@
 
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
 
-  #define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 100, 500 }
+  #define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
@@ -1769,7 +2034,7 @@
     #endif
   #endif
   #define DEFAULT_MAX_FEEDRATE          { 400, 400, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 3000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
   
   #define DEFAULT_ACCELERATION          500    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  500    // E acceleration for retracts
@@ -1831,7 +2096,7 @@
   #endif
 
   #define DEFAULT_MAX_FEEDRATE          { 400, 400, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 3000 }
+  #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 500, 5000 }
   
   #define DEFAULT_ACCELERATION          800    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  800    // E acceleration for retracts
@@ -1903,7 +2168,7 @@
   
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
 
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
   
   #define DEFAULT_ACCELERATION          700    
   #define DEFAULT_RETRACT_ACCELERATION  3000   
@@ -1950,6 +2215,86 @@
   
   #define PRINTER_ENABLED_CHECK
 #endif //end i3 settings
+
+//Aliexpress A-10S Model Settings
+#if ENABLED(ALI_A10S)
+  #define SLIM_1284P
+  #define BAUDRATE 115200
+  
+  #if ENABLED(EZOUTV2_ENABLE)
+    #define SPEAKER_KILL
+  #endif
+  
+  #ifndef MOTHERBOARD
+    #define MOTHERBOARD BOARD_MELZI_MAKR3D
+  #endif
+  #define IS_WANHAO_DI3
+
+  #define DIRECT_DRIVE_PRINTER
+  
+  #define X_MIN_ENDSTOP_INVERTING true
+  #define Y_MIN_ENDSTOP_INVERTING true
+  #define Z_MIN_ENDSTOP_INVERTING true
+  #define X_MAX_ENDSTOP_INVERTING true
+  #define Y_MAX_ENDSTOP_INVERTING true
+  #define Z_MAX_ENDSTOP_INVERTING true
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING true
+
+  #if ENABLED(CUSTOM_ESTEPS)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  #else
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 100 }
+  #endif
+  
+  #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 50 }
+
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
+  
+  #define DEFAULT_ACCELERATION          700    
+  #define DEFAULT_RETRACT_ACCELERATION  3000   
+  #define DEFAULT_TRAVEL_ACCELERATION   700    
+
+  #define X_BED_SIZE 300
+  #define Y_BED_SIZE 300
+  #define Z_MAX_POS 400
+
+  #if ENABLED(HOME_ADJUST)
+    #define X_MIN_POS X_HOME_ADJUST_LOCATION
+    #define Y_MIN_POS Y_HOME_ADJUST_LOCATION
+  #else
+    #define X_MIN_POS 0
+    #define Y_MIN_POS 0
+  #endif
+
+  #define DEFAULT_XJERK                 10.0
+  #define DEFAULT_YJERK                 10.0
+  #define DEFAULT_ZJERK                  0.4
+  #define DEFAULT_EJERK                  5.0
+
+  #define INVERT_X_DIR false
+  #define INVERT_Y_DIR false
+  #define INVERT_Z_DIR true
+
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
+
+  #ifndef ST7920_DELAY_1
+    #define ST7920_DELAY_1 DELAY_NS(200)
+  #endif
+  #ifndef ST7920_DELAY_2
+    #define ST7920_DELAY_2 DELAY_NS(200)
+  #endif
+  #ifndef ST7920_DELAY_3
+    #define ST7920_DELAY_3 DELAY_NS(200)
+  #endif
+
+  #define LCD_FOR_MELZI
+  
+  #define PRINTER_ENABLED_CHECK
+#endif //Aliexpress A-10S settings
 
 //CR-10 and Ender 3 Model Settings
 #if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5)
@@ -2041,9 +2386,23 @@
   #endif
   
   #if ENABLED(ENDER3)
-    #define X_BED_SIZE 235
-    #define Y_BED_SIZE 235
-    #define Z_MAX_POS 250
+		#if ENABLED(ENDER_XTENDER_400)
+			#define X_BED_SIZE 400
+			#define Y_BED_SIZE 400
+			#define Z_MAX_POS 250
+		#elif ENABLED(ENDER_XTENDER_400XL)
+			#define X_BED_SIZE 400
+			#define Y_BED_SIZE 400
+			#define Z_MAX_POS 500
+		#elif ENABLED(ENDER_XTENDER_XL)
+			#define X_BED_SIZE 235
+			#define Y_BED_SIZE 235
+			#define Z_MAX_POS 500
+		#else
+			#define X_BED_SIZE 235
+			#define Y_BED_SIZE 235
+			#define Z_MAX_POS 250
+		#endif
   #endif
   
   #if ENABLED(ENDER5)
@@ -2068,7 +2427,7 @@
 #endif //end CR-10
 
 //CR-10S Model Settings
-#if ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(ENDER3_DUALBOARD) || ENABLED(CR20) || ENABLED(ENDER5_DUALBOARD)
+#if ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(ENDER3_DUALBOARD) || ENABLED(CR20) || ENABLED(ENDER5_DUALBOARD) || ENABLED(CRX)
   #define BAUDRATE 115200
   
   #if ENABLED(TOUCH_LCD_FIX)
@@ -2081,6 +2440,13 @@
     #define MINIPANEL
   #else
     #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+    #if ENABLED(CRX)
+      #define REVERSE_ENCODER_DIRECTION
+    #endif
+  #endif
+
+  #if ENABLED(CRX) && ENABLED(EZOUTV2_ENABLE)
+    #define EZOUTV2_DUAL_ENABLE 
   #endif
 
   #define X_MIN_ENDSTOP_INVERTING false
@@ -2098,7 +2464,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  500   
@@ -2115,7 +2481,12 @@
   #define DEFAULT_EJERK                  5.0
   
   #define INVERT_X_DIR false
-  #define INVERT_Y_DIR false
+  
+  #if ENABLED(CRX)
+    #define INVERT_Y_DIR true
+  #else
+    #define INVERT_Y_DIR false
+  #endif
   
   #if ENABLED(ENDER5_DUALBOARD)
     #define INVERT_Z_DIR false
@@ -2137,7 +2508,7 @@
     #define SPEAKER_KILL
   #endif
 
-  #if ENABLED(CR10S)
+  #if ENABLED(CR10S) || ENABLED(CRX)
     #define X_BED_SIZE 300
     #define Y_BED_SIZE 300
     #define Z_MAX_POS 400
@@ -2162,9 +2533,23 @@
   #endif
   
   #if ENABLED(ENDER3_DUALBOARD)
-    #define X_BED_SIZE 235
-    #define Y_BED_SIZE 235
-    #define Z_MAX_POS 250
+		#if ENABLED(ENDER_XTENDER_400)
+			#define X_BED_SIZE 400
+			#define Y_BED_SIZE 400
+			#define Z_MAX_POS 250
+		#elif ENABLED(ENDER_XTENDER_400XL)
+			#define X_BED_SIZE 400
+			#define Y_BED_SIZE 400
+			#define Z_MAX_POS 500
+		#elif ENABLED(ENDER_XTENDER_XL)
+			#define X_BED_SIZE 235
+			#define Y_BED_SIZE 235
+			#define Z_MAX_POS 500
+		#else
+			#define X_BED_SIZE 235
+			#define Y_BED_SIZE 235
+			#define Z_MAX_POS 250
+		#endif
   #endif
   
   #if ENABLED(ENDER5_DUALBOARD)
@@ -2176,21 +2561,29 @@
   #if ENABLED(CR20)
     #define X_BED_SIZE 220
     #define Y_BED_SIZE 220
-    #define Z_MAX_POS 320
+    #define Z_MAX_POS 250
   #endif
   
   //dual extrusion options
   
   //single hotend y adapter
-  #if ENABLED(DUAL_EXTRUDER_SINGLE_HOTEND)
+  #if ENABLED(DUAL_EXTRUDER_SINGLE_HOTEND) || ENABLED(CRX)
     #define CR10SDUALEBOARD
     #define SINGLENOZZLE
     #define DUAL_EXTRUDERS
-    
-    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
-      #define INVERT_E1_DIR true
+
+    #if ENABLED(CRX)
+      #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+        #define INVERT_E1_DIR false
+      #else
+        #define INVERT_E1_DIR true
+      #endif
     #else
-      #define INVERT_E1_DIR false
+      #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+        #define INVERT_E1_DIR true
+      #else
+        #define INVERT_E1_DIR false
+      #endif
     #endif
 
   #endif
@@ -2215,8 +2608,13 @@
     #define X_MIN_POS X_HOME_ADJUST_LOCATION
     #define Y_MIN_POS Y_HOME_ADJUST_LOCATION
   #else
-    #define X_MIN_POS 0
-    #define Y_MIN_POS 0
+    #if ENABLED(CRX)
+      #define X_MIN_POS 0
+      #define Y_MIN_POS -8
+    #else
+      #define X_MIN_POS 0
+      #define Y_MIN_POS 0
+    #endif
   #endif
   
   #define ENCODER_PULSES_PER_STEP 4
@@ -2250,7 +2648,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 100, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          1000    
   #define DEFAULT_RETRACT_ACCELERATION  1000    
@@ -2312,7 +2710,7 @@
   #endif
   
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500    
   #define DEFAULT_RETRACT_ACCELERATION  1000   
@@ -2326,7 +2724,12 @@
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR false
   #define INVERT_Z_DIR true
-  #define INVERT_E0_DIR true
+  
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
   
   #ifndef MOTHERBOARD
     #define MOTHERBOARD BOARD_MKS_BASE
@@ -2375,7 +2778,7 @@
   
   #define DEFAULT_MAX_FEEDRATE {300, 300, 3, 50}
 
-  #define DEFAULT_MAX_ACCELERATION {9000,9000,100,10000}
+  #define DEFAULT_MAX_ACCELERATION {9000, 9000, 500, 5000}
 
   #define DEFAULT_ACCELERATION          500    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
@@ -2389,7 +2792,12 @@
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR true
   #define INVERT_Z_DIR false
-  #define INVERT_E0_DIR true
+  
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
   
   #ifndef MOTHERBOARD
     #define MOTHERBOARD BOARD_RAMBO
@@ -2445,7 +2853,7 @@
   #endif
 
   #define DEFAULT_MAX_FEEDRATE          { 500, 500, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 5000 }
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500   
   #define DEFAULT_RETRACT_ACCELERATION  1000  
@@ -2849,7 +3257,7 @@
 #define TEMP_SENSOR_4 0
 
 #if DISABLED(TH3DINHOUSEMACHINE)
-  #if ENABLED(AC_BED) || ENABLED(WANHAO_I3MINI)
+  #if ENABLED(AC_BED) || (ENABLED(WANHAO_I3MINI) && DISABLED(WANHAO_I3MINI_V2))
     #define TEMP_SENSOR_BED 0
   #elif ENABLED(KNOWN_BED_THERMISTOR)
     #define TEMP_SENSOR_BED KNOWN_BED_THERMISTOR_VALUE
@@ -2895,7 +3303,12 @@
 #define HEATER_4_MINTEMP 5
 #define BED_MINTEMP 5
 
-#define HEATER_0_MAXTEMP 290
+#if ENABLED(HIGH_TEMP_THERMISTOR)
+  #define HEATER_0_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+#else
+  #define HEATER_0_MAXTEMP 290
+#endif
+
 #define HEATER_1_MAXTEMP 290
 #define HEATER_2_MAXTEMP 290
 #define HEATER_3_MAXTEMP 290
@@ -3017,40 +3430,58 @@
   #define HOMING_FEEDRATE_XY (40*60)
 #endif
 
-#if DISABLED(EZABL_FASTPROBE)
-  #define HOMING_FEEDRATE_Z  (4*60)
-#else
+#if ENABLED(EZABL_SUPERFASTPROBE) && DISABLED(BLTOUCH)
+  #define HOMING_FEEDRATE_Z  (15*60)
+#elif ENABLED(EZABL_FASTPROBE) && DISABLED(BLTOUCH)
   #define HOMING_FEEDRATE_Z  (8*60)
+#else
+  #define HOMING_FEEDRATE_Z  (4*60)
 #endif
   
 #if ENABLED(EZABL_ENABLE)
-  #define RESTORE_LEVELING_AFTER_G28
   #if DISABLED(BLTOUCH)
     #define FIX_MOUNTED_PROBE
   #endif
   #define Z_PROBE_OFFSET_FROM_EXTRUDER 0
+  
   #if ENABLED(PROBING_MOTORS_OFF)
     #define XY_PROBE_SPEED 8000
   #else
     #if ENABLED(SLOWER_PROBE_MOVES) || ENABLED(TH3D_EZ300) || ENABLED(TIM_AM8)
       #define XY_PROBE_SPEED 8000
     #else
-      #define XY_PROBE_SPEED 12000
+      #if ENABLED(EZABL_SUPERFASTPROBE)
+        #define XY_PROBE_SPEED 16000
+      #else
+        #define XY_PROBE_SPEED 12000
+      #endif
     #endif
   #endif
+  
   #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
   #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)  
   #if ENABLED(FIX_MOUNTED_PROBE) && DISABLED(HEATERS_ON_DURING_PROBING)
     #define PROBING_HEATERS_OFF   
   #endif  
+  
   #define MULTIPLE_PROBING 2
+
   #if ENABLED(BLTOUCH)
     #define Z_CLEARANCE_DEPLOY_PROBE   15
     #define Z_CLEARANCE_BETWEEN_PROBES 10
+    #define Z_CLEARANCE_MULTI_PROBE    10
+    #define ENDSTOPPULLUP_ZMIN
+    #define ENDSTOPPULLUP_ZMIN_PROBE
+  #elif ENABLED(EZABL_SUPERFASTPROBE)
+    #define Z_CLEARANCE_DEPLOY_PROBE   1
+    #define Z_CLEARANCE_BETWEEN_PROBES 2
+    #define Z_CLEARANCE_MULTI_PROBE    1
   #else
     #define Z_CLEARANCE_DEPLOY_PROBE   5
     #define Z_CLEARANCE_BETWEEN_PROBES 3
+    #define Z_CLEARANCE_MULTI_PROBE    3
   #endif
+  
   #define Z_PROBE_OFFSET_RANGE_MIN  -5
   #define Z_PROBE_OFFSET_RANGE_MAX  1  
   #define Z_MIN_PROBE_REPEATABILITY_TEST  
@@ -3179,8 +3610,7 @@
   #endif
 #endif
 
-#if ENABLED(MANUAL_MESH_LEVELING) && DISABLED(EZABL_ENABLE)
-  #define RESTORE_LEVELING_AFTER_G28
+#if ENABLED(MANUAL_MESH_LEVELING) && DISABLED(EZABL_ENABLE) && DISABLED(WANHAO_I3_PLUS)
   #define PROBE_MANUALLY
   #define LCD_BED_LEVELING
   #define MESH_BED_LEVELING

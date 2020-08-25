@@ -24,66 +24,18 @@
 #define CONFIGURATION_ADV_H
 #define CONFIGURATION_ADV_H_VERSION 010109
 
+#if ENABLED(SIDEWINDER_X1)
+  //DUAL Z STEPPER CONFIG
+  #define Z_DUAL_STEPPER_DRIVERS
+#endif
+
 #if ENABLED(BLTOUCH)
-  /**
-   * Either: Use the defaults (recommended) or: For special purposes, use the following DEFINES
-   * Do not activate settings that the probe might not understand. Clones might misunderstand
-   * advanced commands.
-   *
-   * Note: If the probe is not deploying, check a "Cmd: Reset" and "Cmd: Self-Test" and then
-   *       check the wiring of the BROWN, RED and ORANGE wires.
-   *
-   * Note: If the trigger signal of your probe is not being recognized, it has been very often
-   *       because the BLACK and WHITE wires needed to be swapped. They are not "interchangeable"
-   *       like they would be with a real switch. So please check the wiring first.
-   *
-   * Settings for all BLTouch and clone probes:
-   */
-
-  // Safety: The probe needs time to recognize the command.
-  //         Minimum command delay (ms). Enable and increase if needed.
-  //#define BLTOUCH_DELAY 500
-
-  /**
-   * Settings for BLTOUCH Classic 1.2, 1.3 or BLTouch Smart 1.0, 2.0, 2.2, 3.0, 3.1, and most clones:
-   */
-
-  // Feature: Switch into SW mode after a deploy. It makes the output pulse longer. Can be useful
-  //          in special cases, like noisy or filtered input configurations.
-  //#define BLTOUCH_FORCE_SW_MODE
-
-  /**
-   * Settings for BLTouch Smart 3.0 and 3.1
-   * Summary:
-   *   - Voltage modes: 5V and OD (open drain - "logic voltage free") output modes
-   *   - High-Speed mode
-   *   - Disable LCD voltage options
-   */
-
-  /**
-   * Danger: Don't activate 5V mode unless attached to a 5V-tolerant controller!
-   * V3.0 or 3.1: Set default mode to 5V mode at Marlin startup.
-   * If disabled, OD mode is the hard-coded default on 3.0
-   * On startup, Marlin will compare its eeprom to this vale. If the selected mode
-   * differs, a mode set eeprom write will be completed at initialization.
-   * Use the option below to force an eeprom write to a V3.1 probe regardless.
-   */
-  //#define BLTOUCH_SET_5V_MODE
-
-  /**
-   * Safety: Activate if connecting a probe with an unknown voltage mode.
-   * V3.0: Set a probe into mode selected above at Marlin startup. Required for 5V mode on 3.0
-   * V3.1: Force a probe with unknown mode into selected mode at Marlin startup ( = Probe EEPROM write )
-   * To preserve the life of the probe, use this once then turn it off and re-flash.
-   */
-  //#define BLTOUCH_FORCE_MODE_SET
-
-  // Safety: Enable voltage mode settings in the LCD menu.
-  //#define BLTOUCH_LCD_VOLTAGE_MENU
-
+  #define BLTOUCH_DELAY 750
+  #define BLTOUCH_SET_5V_MODE
+  #define BLTOUCH_FORCE_MODE_SET
 #endif // BLTOUCH
 
-#if ENABLED(TH3D_RGB_STRIP)
+#if ENABLED(TH3D_RGB_STRIP) || ENABLED(SIDEWINDER_X1)
   #define LED_CONTROL_MENU
   #define LED_COLOR_PRESETS                 // Enable the Preset Color menu option
   #define LED_USER_PRESET_RED        130  // User defined RED value
@@ -104,16 +56,16 @@
 #if ENABLED(THERMAL_PROTECTION_HOTENDS)
   #define THERMAL_PROTECTION_PERIOD HOTEND_THERMAL_PROTECTION_TIME // Seconds
   #define THERMAL_PROTECTION_HYSTERESIS 4     // Degrees Celsius
-  #define WATCH_TEMP_PERIOD HOTEND_THERMAL_PROTECTION_TIME                // Seconds
+  #define WATCH_TEMP_PERIOD (HOTEND_THERMAL_PROTECTION_TIME / 2)                // Seconds
   #define WATCH_TEMP_INCREASE 4               // Degrees Celsius
 #endif
 
  
 #if ENABLED(THERMAL_PROTECTION_BED)
-  #define THERMAL_PROTECTION_BED_PERIOD BED_THERMAL_PROTECTION_TIME    // Seconds
-  #define THERMAL_PROTECTION_BED_HYSTERESIS 4 // Degrees Celsius
+  #define THERMAL_PROTECTION_BED_PERIOD (BED_THERMAL_PROTECTION_TIME / 2)    // Seconds
+  #define THERMAL_PROTECTION_BED_HYSTERESIS 2 // Degrees Celsius
   #define WATCH_BED_TEMP_PERIOD BED_THERMAL_PROTECTION_TIME                // Seconds
-  #define WATCH_BED_TEMP_INCREASE 4               // Degrees Celsius
+  #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
 #endif
 
 #define TEMP_SENSOR_AD595_OFFSET 0.0
@@ -162,7 +114,7 @@
   
 #endif
 
-#if ENABLED(TORNADO) || ENABLED(TARANTULA_PRO)
+#if ENABLED(TORNADO) || ENABLED(TARANTULA_PRO) || ENABLED(SIDEWINDER_X1)
   #define E0_AUTO_FAN_PIN 7
   #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
   #if ENABLED(TORNADO_QUIET) || ENABLED(TARANTULA_PRO_QUIET)
@@ -173,20 +125,28 @@
   #if ENABLED(TIM_TORNADO)
     #define USE_CONTROLLER_FAN
     #if ENABLED(USE_CONTROLLER_FAN)
-      #define CONTROLLER_FAN_PIN 11  // Set a custom pin for the controller fan
-      #define CONTROLLERFAN_SECS 10          // Duration in seconds for the fan to run after all motors are disabled
-      #define CONTROLLERFAN_SPEED 255        // 255 == full speed
+      #define CONTROLLER_FAN_PIN 11
+      #define CONTROLLERFAN_SECS 10
+      #define CONTROLLERFAN_SPEED 255
     #endif
   #endif
 #else
   #if ENABLED(I3MINI_FANCONTROL)
     #define E0_AUTO_FAN_PIN 12
     #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-    #define EXTRUDER_AUTO_FAN_SPEED   255  // == full speed
+    #define EXTRUDER_AUTO_FAN_SPEED   255
   #elif ENABLED(TH3D_EZ300)
     #define E0_AUTO_FAN_PIN 7
     #define EXTRUDER_AUTO_FAN_TEMPERATURE 40
     #define EXTRUDER_AUTO_FAN_SPEED   255
+  #elif ENABLED(MKS_PRINTER) && DISABLED(DUAL_HOTEND_DUAL_NOZZLES)
+    #define E0_AUTO_FAN_PIN 7
+    #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
+    #define EXTRUDER_AUTO_FAN_SPEED   255  
+  #elif ENABLED(ZONESTAR_Z5F)
+    #define E0_AUTO_FAN_PIN 6
+    #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
+    #define EXTRUDER_AUTO_FAN_SPEED   255 
   #else  
     #define E0_AUTO_FAN_PIN -1
     #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
@@ -244,7 +204,7 @@
   #define ULTIPANEL_FEEDMULTIPLY  
 #endif
 
-#define DEFAULT_MINSEGMENTTIME        20000
+#define DEFAULT_MINSEGMENTTIME        50000
 #define SLOWDOWN
 #define MINIMUM_PLANNER_SPEED 0.05
 
@@ -252,20 +212,12 @@
   #if DISABLED(POWER_LOSS_RECOVERY)
     #if DISABLED(WANHAO_I3_PLUS)
       #define JUNCTION_DEVIATION
-      #define JUNCTION_DEVIATION_MM 0.02
+      #define JUNCTION_DEVIATION_MM 0.013
     #endif
   #endif
 #endif
 
-/**
- * Adaptive Step Smoothing increases the resolution of multi-axis moves, particularly at step frequencies
- * below 1kHz (for AVR) or 10kHz (for ARM), where aliasing between axes in multi-axis moves causes audible
- * vibration and surface artifacts. The algorithm adapts to provide the best possible step smoothing at the
- * lowest stepping frequencies.
- */
-//#define ADAPTIVE_STEP_SMOOTHING //test if helps slowdown 254 more bytes - no effect
-
-#define MICROSTEP_MODES {16,16,16,16,16} // [1,2,4,8,16]
+#define MICROSTEP_MODES {16,16,16,16,16}
 
 #define ENCODER_RATE_MULTIPLIER       
 #define ENCODER_10X_STEPS_PER_SEC 75  
@@ -367,28 +319,31 @@
 #define MIN_STEPS_PER_SEGMENT 6
 
 #define BLOCK_BUFFER_SIZE 16
-#define MAX_CMD_SIZE 96
-#if ENABLED(WANHAO_I3_PLUS)
-  #define BUFSIZE 8
-#else
+#define MAX_CMD_SIZE 80
+
+#if DISABLED(SLIM_1284P) && ENABLED(POWER_LOSS_RECOVERY)
   #define BUFSIZE 4
+#else
+  #define BUFSIZE 16
 #endif
 #define TX_BUFFER_SIZE 0
 
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_RETRACT_FEEDRATE         60 
+  #define PAUSE_PARK_RETRACT_FEEDRATE         50 
   #define PAUSE_PARK_RETRACT_LENGTH            2 
-  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     10  
+  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     20  
   #define FILAMENT_CHANGE_UNLOAD_ACCEL        25  
   #if ENABLED(DIRECT_DRIVE_PRINTER)
-    #define FILAMENT_CHANGE_UNLOAD_LENGTH      20  
+    #define FILAMENT_CHANGE_UNLOAD_LENGTH      20
+  #elif ENABLED(MOUNTED_FILAMENT_SENSOR)
+    #define FILAMENT_CHANGE_UNLOAD_LENGTH      0
   #else
     #define FILAMENT_CHANGE_UNLOAD_LENGTH      100
   #endif
   #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   6  
   #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH     0  
-  #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE   6  
+  #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE  20  
   #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25  
   #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     0  
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        3  

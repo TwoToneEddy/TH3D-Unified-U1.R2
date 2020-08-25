@@ -97,8 +97,14 @@
 #else
   #define Y_MAX_PIN        15
 #endif
-#define Z_MIN_PIN          18
-#define Z_MAX_PIN          19
+
+#if ENABLED(ZONESTAR_Z5F_STOCK_ABL)
+  #define Z_MIN_PIN          19 //18
+  #define Z_MAX_PIN          18 //19
+#else
+  #define Z_MIN_PIN          18
+  #define Z_MAX_PIN          19
+#endif
 
 //
 // Z Probe (when not Z_MIN_PIN)
@@ -315,7 +321,9 @@
 #elif DISABLED(IS_RAMPS_SF)                    // Not Spindle, Fan (i.e., "EFBF" or "EFBE")
   #define HEATER_BED_PIN   RAMPS_D8_PIN
   #if HOTENDS == 1
-    #define FAN1_PIN       MOSFET_D_PIN
+    #if DISABLED(STOCK_MKS_PRINTER)
+      #define FAN1_PIN       MOSFET_D_PIN
+    #endif
   #else
     #define HEATER_1_PIN   MOSFET_D_PIN
   #endif
